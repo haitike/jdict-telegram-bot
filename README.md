@@ -1,4 +1,5 @@
-A simple japanese dictionary bot for telegram using the free EDICT dictionary written in Python 3.
+A simple japanese dictionary bot for telegram written in Python.
+It uses the EDICT dictionary (http://www.edrdg.org/jmdict/edict.html) that is free with Creative Commons License.
 It can be executed as a polling script or using a webhook (In my case openshift).
 
 Instructions:

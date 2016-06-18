@@ -2,8 +2,9 @@ from gettext import gettext as _
 import os
 import logging
 import configparser
-from datetime import datetime
-from telegram import Updater
+
+from telegram import InlineQueryResultArticle, InputTextMessageContent
+from telegram.ext import Updater, CommandHandler, InlineQueryHandler, MessageHandler, Filters
 from telegram.error import TelegramError
 
 CONFIGFILE_PATH = "data/config.cfg"
@@ -65,24 +66,31 @@ class Bot(object):
         return s
 
     def add_handlers(self):
-        self.dispatcher.addTelegramCommandHandler("start", self.command_start)
-        self.dispatcher.addTelegramCommandHandler("help", self.command_help)
-        self.dispatcher.addTelegramMessageHandler(self.command_echo)
-        #self.dispatcher.addUnknownTelegramCommandHandler(self.command_unknown)
+        self.dispatcher.add_handler(CommandHandler("start", self.command_help))
+        self.dispatcher.add_handler(CommandHandler("help", self.command_help))
+        self.dispatcher.add_handler(MessageHandler([Filters.text], self.command_help))
+        self.dispatcher.add_handler(InlineQueryHandler(self.inlinequery))
         #self.dispatcher.addErrorHandler(self.error_handle)
 
-    def command_start(self, bot, update):
-        self.send_message(bot, update.message.chat, _("Jdict telegram bot was initiated"))
+
+    def inlinequery(self, bot, update):
+        query = update.inline_query.query
+        results = list()
+
+        results.append(InlineQueryResultArticle(id="this id is retrieved from EDICT",
+                                                title=query,
+                                                input_message_content=InputTextMessageContent(
+                                                "%s was not found in the dictionary" % query)))
+
+        bot.answerInlineQuery(update.inline_query.id, results=results)
 
     def command_help(self, bot, update):
-        self.send_message(bot, update.message.chat, _(
-            """Available Commands:
-            /start - Iniciciate or Restart the bot
-            /help - Show the command list.
-            /time - Bot local time check"""))
-
-    def command_echo(self, bot , update):
-        self.send_message(bot, update.message.chat, update.message.text)
+        self.send_message(bot, update.message.chat, _("Welcome to the Japanese-English Dictionary Bot.\n"
+                                                      "This bot is created for being used inline and it is global. \n"
+                                                      "You can call him in any chat with @jdict_bot\n"
+                                                      "Examples: \n"
+                                                      "\t\t\t@jdict_bot dog\n"
+                                                      "\t\t\t@jdict_bot 犬"))
 
     def send_message(self, bot, chat, text):
         try:

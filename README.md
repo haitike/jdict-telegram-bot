@@ -1,4 +1,5 @@
-This is a basic Telegram Bot writted on Python 3. It can be executed using the webhook feature on Openshift hosting. It can also be executed as a polling script.
+A simple japanese dictionary bot for telegram using the free EDICT dictionary written in Python 3.
+It can be executed as a polling script or using a webhook (In my case openshift).
 
 Instructions:
 - Raname data/config-default.cfg to data/config.cfg

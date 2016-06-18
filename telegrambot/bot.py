@@ -1,12 +1,10 @@
 from gettext import gettext as _
 import os
 import logging
-import pytz
 import configparser
 from datetime import datetime
 from telegram import Updater
 from telegram.error import TelegramError
-from pytz import timezone
 
 CONFIGFILE_PATH = "data/config.cfg"
 logging.basicConfig(level=logging.INFO)
@@ -23,11 +21,6 @@ class Bot(object):
         self.updater = Updater(token=self.get_bot_conf("TOKEN"))
         self.dispatcher = self.updater.dispatcher
         self.add_handlers()
-
-        try:
-            self.tzinfo = timezone(self.get_bot_conf("TIMEZONE"))
-        except:
-            self.tzinfo = pytz.utc
 
     def get_bot_conf(self, value):
         return self.config["bot"][value]
@@ -80,7 +73,7 @@ class Bot(object):
         #self.dispatcher.addErrorHandler(self.error_handle)
 
     def command_start(self, bot, update):
-        self.send_message(bot, update.message.chat, _("Welcome to Dungeon World Bot."))
+        self.send_message(bot, update.message.chat, _("Jdict telegram bot was initiated"))
 
     def command_help(self, bot, update):
         self.send_message(bot, update.message.chat, _(

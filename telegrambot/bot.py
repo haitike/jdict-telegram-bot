@@ -67,7 +67,6 @@ class Bot(object):
     def add_handlers(self):
         self.dispatcher.addTelegramCommandHandler("start", self.command_start)
         self.dispatcher.addTelegramCommandHandler("help", self.command_help)
-        self.dispatcher.addTelegramCommandHandler("time", self.command_time)
         self.dispatcher.addTelegramMessageHandler(self.command_echo)
         #self.dispatcher.addUnknownTelegramCommandHandler(self.command_unknown)
         #self.dispatcher.addErrorHandler(self.error_handle)
@@ -81,12 +80,6 @@ class Bot(object):
             /start - Iniciciate or Restart the bot
             /help - Show the command list.
             /time - Bot local time check"""))
-
-    def command_time(self, bot , update):
-        utc_date = datetime.utcnow()
-        local_date = pytz.utc.localize(utc_date).astimezone(self.tzinfo)
-        formated_string = local_date.strftime("%d/%m/%y %H:%M")
-        self.send_message(bot, update.message.chat, formated_string)
 
     def command_echo(self, bot , update):
         self.send_message(bot, update.message.chat, update.message.text)
